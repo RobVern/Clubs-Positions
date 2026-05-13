@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Real Soso Dads · Position Randomiser</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #0a0a12 0%, #111827 60%, #0a0a12 100%);
+      color: #fff;
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 38px, rgba(255,255,255,0.012) 38px, rgba(255,255,255,0.012) 39px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    #app {
+      position: relative;
+      z-index: 1;
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 24px 16px 60px;
+    }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 28px; }
+    .header-sub { font-size: 10px; letter-spacing: 6px; color: #00e676; margin-bottom: 4px; font-weight: 700; }
+    .header-title { font-family: 'Bebas Neue', sans-serif; font-size: 46px; line-height: 1; letter-spacing: 3px; text-shadow: 0 0 40px rgba(0,230,118,0.25); }
+    .header-desc { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 6px; }
+
+    /* Section box */
+    .sbox { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 18px; margin-bottom: 16px; }
+    .sbox-purple { border-color: rgba(155,89,182,0.35); }
+    .slabel { font-weight: 700; font-size: 10px; letter-spacing: 4px; color: rgba(255,255,255,0.35); margin-bottom: 12px; }
+    .slabel-purple { color: rgba(155,89,182,0.8); }
+
+    /* Player cards */
+    .pcard { background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; margin-bottom: 8px; transition: border-color 0.12s, background 0.12s; }
+    .pcard.active { background: rgba(0,230,118,0.07); border-color: rgba(0,230,118,0.5); }
+    .pcard-top { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; cursor: pointer; }
+    .pcard-avatar { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 13px; color: rgba(255,255,255,0.4); font-weight: 700; flex-shrink: 0; font-family: 'Bebas Neue', sans-serif; transition: background 0.12s, color 0.12s; }
+    .pcard.active .pcard-avatar { background: #00e676; color: #000; }
+    .pcard-name { font-weight: 600; font-size: 14px; color: rgba(255,255,255,0.55); margin-left: 9px; transition: color 0.12s; }
+    .pcard.active .pcard-name { color: #fff; }
+    .pcard-remove { background: none; border: none; color: rgba(255,255,255,0.18); cursor: pointer; font-size: 17px; padding: 0 0 0 6px; line-height: 1; }
+
+    /* Restriction pills */
+    .restrictions { display: flex; align-items: center; gap: 6px; padding: 0 14px 11px; flex-wrap: wrap; }
+    .restr-label { font-size: 11px; color: rgba(255,255,255,0.3); margin-right: 2px; letter-spacing: 0.5px; }
+    .rtag { cursor: pointer; user-select: none; border-radius: 5px; padding: 3px 8px; font-size: 11px; font-weight: 700; letter-spacing: 1px; border: 1.5px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.3); background: transparent; transition: background 0.12s, border-color 0.12s, color 0.12s; }
+    .rtag.att-on { background: rgba(231,76,60,0.15); border-color: #e74c3c; color: #e74c3c; }
+    .rtag.mid-on { background: rgba(52,152,219,0.15); border-color: #3498db; color: #3498db; }
+    .rtag.def-on { background: rgba(46,204,113,0.15); border-color: #2ecc71; color: #2ecc71; }
+    .restr-none { font-size: 11px; color: rgba(255,255,255,0.2); }
+
+    /* Add player */
+    .add-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .add-input { flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18); color: #fff; padding: 8px 12px; border-radius: 6px; font-family: 'Barlow', sans-serif; font-size: 14px; outline: none; }
+    .add-input:focus { border-color: #00e676; }
+    .add-input::placeholder { color: rgba(255,255,255,0.3); }
+    .add-btn { background: #00e676; color: #000; border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 13px; }
+    .add-toggle { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.65); border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 12px; }
+
+    /* Roll button */
+    .roll-btn { width: 100%; padding: 17px; background: linear-gradient(135deg, #00e676, #00c853); color: #000; border: none; border-radius: 11px; font-size: 21px; letter-spacing: 4px; font-family: 'Bebas Neue', sans-serif; cursor: pointer; margin-bottom: 18px; transition: transform 0.18s, box-shadow 0.18s, background 0.18s, color 0.18s; }
+    .roll-btn:hover:not(:disabled) { transform: scale(1.03); box-shadow: 0 0 28px rgba(0,230,118,0.45); }
+    .roll-btn:disabled { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.25); cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* Position row */
+    .pos-row { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); border-radius: 7px; padding: 10px 14px; margin-bottom: 8px; border-left: 3px solid #555; }
+    .pos-badge { color: #fff; border-radius: 5px; padding: 3px 9px; font-size: 14px; font-family: 'Bebas Neue', sans-serif; letter-spacing: 1.5px; min-width: 48px; text-align: center; flex-shrink: 0; }
+    .pos-badge-lg { border-radius: 6px; padding: 4px 10px; font-size: 15px; min-width: 52px; }
+    .pos-name { font-weight: 600; font-size: 14px; color: #fff; flex: 1; }
+    .pos-name-lg { font-size: 15px; }
+
+    /* Any checkbox */
+    .any-check { width: 22px; height: 22px; border-radius: 5px; border: 2px solid rgba(255,255,255,0.2); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.12s; }
+    .any-check.on { border-color: #9b59b6; background: #9b59b6; }
+    .any-check-inner { color: #fff; font-size: 13px; line-height: 1; }
+
+    /* Any roll btn */
+    .any-btn { flex: 1; padding: 13px; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.25); border: none; border-radius: 9px; font-size: 18px; letter-spacing: 3px; font-family: 'Bebas Neue', sans-serif; cursor: not-allowed; transition: transform 0.18s, box-shadow 0.18s, background 0.18s, color 0.18s; }
+    .any-btn.ready { background: linear-gradient(135deg, #9b59b6, #7d3c98); color: #fff; cursor: pointer; }
+    .any-btn.ready:hover { transform: scale(1.03); box-shadow: 0 0 28px rgba(155,89,182,0.55); }
+
+    /* Reroll buttons */
+    .reroll-row { display: flex; gap: 8px; margin-top: 14px; }
+    .reroll-btn { flex: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.45); border-radius: 7px; cursor: pointer; font-weight: 600; font-size: 13px; letter-spacing: 1px; font-family: 'Barlow', sans-serif; }
+    .reroll-btn-any { background: rgba(155,89,182,0.12); border-color: rgba(155,89,182,0.3); color: #9b59b6; }
+
+    /* Infeasible warning */
+    .warn { margin-top: 12px; padding: 10px 14px; background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.3); border-radius: 8px; font-size: 13px; color: #e74c3c; }
+
+    /* Animations */
+    .spin { animation: flicker 0.07s infinite; }
+    @keyframes flicker { 0%,100%{opacity:1;}50%{opacity:0.5;} }
+    .row-in { animation: rowIn 0.32s ease forwards; opacity: 0; }
+    @keyframes rowIn { from{transform:translateX(-16px);opacity:0;}to{transform:translateX(0);opacity:1;} }
+    .badge-pulse { animation: bpulse 1.8s ease-in-out infinite; }
+    @keyframes bpulse { 0%,100%{box-shadow:0 0 0 0 rgba(155,89,182,0.5);}50%{box-shadow:0 0 0 8px rgba(155,89,182,0);} }
+
+    /* Legend */
+    .legend { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: rgba(255,255,255,0.35); }
+    .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+    /* Misc */
+    .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .count-label { font-size: 12px; }
+    .count-ok { color: #00e676; }
+    .count-dim { color: rgba(255,255,255,0.4); }
+    .any-footer { display: flex; align-items: center; gap: 10px; }
+    .any-pool-label { font-size: 12px; min-width: 110px; }
+    .result-title { text-align: center; letter-spacing: 5px; }
+    .any-tag { font-size: 11px; color: #9b59b6; font-weight: 700; letter-spacing: 2px; }
+    .any-row-bg { background: rgba(155,89,182,0.1) !important; }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ── Data ────────────────────────────────────────────────────────────────────
+const DEFAULT_PLAYERS = [
+  "Marko9Gardinic",
+  "Lewiss_2021",
+  "Shrooms4TheYouth",
+  "RobVernazza",
+  "temp-85949058134",
+];
+
+const POSITION_POOL = [
+  { label:"ST",  color:"#e74c3c", line:"ATT" },
+  { label:"LW",  color:"#e74c3c", line:"ATT" },
+  { label:"RW",  color:"#e74c3c", line:"ATT" },
+  { label:"CAM", color:"#e07b00", line:"ATT" },
+  { label:"CM",  color:"#3498db", line:"MID" },
+  { label:"CDM", color:"#3498db", line:"MID" },
+  { label:"CB",  color:"#2ecc71", line:"DEF" },
+  { label:"LB",  color:"#2ecc71", line:"DEF" },
+  { label:"RB",  color:"#2ecc71", line:"DEF" },
+];
+
+const LINE_META = {
+  ATT: { label:"Attack",   color:"#e74c3c", cls:"att-on" },
+  MID: { label:"Midfield", color:"#3498db", cls:"mid-on" },
+  DEF: { label:"Defence",  color:"#2ecc71", cls:"def-on" },
+};
+
+const lineOrder = { ATT:0, MID:1, DEF:2, ANY:3 };
+
+// ── State ───────────────────────────────────────────────────────────────────
+let state = {
+  players: [...DEFAULT_PLAYERS],
+  selected: {},        // { name: bool }
+  restrictions: {},    // { name: Set<"ATT"|"MID"|"DEF"> }
+  showAdd: false,
+  stage: "select",     // "select" | "any" | "result"
+  assignments: [],     // [{player, position}]
+  anySelected: {},     // { name: bool }
+  anyResult: null,
+  rolling: false,
+  spinData: [],
+  infeasible: false,
+};
+
+// ── Helpers ─────────────────────────────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function assignPositions(players, positions, restrictions) {
+  const sorted = [...players].sort((a, b) => {
+    const ra = (restrictions[a]||new Set()).size;
+    const rb = (restrictions[b]||new Set()).size;
+    if (ra === 0 && rb === 0) return 0;
+    if (ra === 0) return 1;
+    if (rb === 0) return -1;
+    return ra - rb;
+  });
+  const posPool = [...positions];
+  const result = new Array(sorted.length).fill(null);
+  const usedPos = new Array(posPool.length).fill(false);
+  function bt(idx) {
+    if (idx === sorted.length) return true;
+    const player = sorted[idx];
+    const allowed = restrictions[player] || new Set();
+    for (let pi = 0; pi < posPool.length; pi++) {
+      if (usedPos[pi]) continue;
+      const pos = posPool[pi];
+      if (allowed.size > 0 && !allowed.has(pos.line)) continue;
+      usedPos[pi] = true;
+      result[idx] = { player, position: pos };
+      if (bt(idx + 1)) return true;
+      usedPos[pi] = false;
+      result[idx] = null;
+    }
+    return false;
+  }
+  return bt(0) ? result : null;
+}
+
+// ── Render ───────────────────────────────────────────────────────────────────
+function render() {
+  const s = state;
+  const selectedPlayers = s.players.filter(p => s.selected[p]);
+  const count = selectedPlayers.length;
+  const canRoll = count >= 2 && count <= 9;
+  const anyPool = selectedPlayers.filter(p => s.anySelected[p]);
+  const anyPoolValid = anyPool.length >= 2;
+
+  const finalAssignments = s.assignments.map(a => ({
+    ...a,
+    position: a.player === s.anyResult ? { label:"ANY", color:"#9b59b6", line:"ANY" } : a.position,
+    isAny: a.player === s.anyResult,
+  }));
+  const sortedFinal = [...finalAssignments].sort(
+    (a, b) => (lineOrder[a.position?.line]??9) - (lineOrder[b.position?.line]??9)
+  );
+
+  // Build player cards HTML
+  const playerCardsHtml = s.players.map(player => {
+    const isSel = !!s.selected[player];
+    const restr = s.restrictions[player] || new Set();
+    const avatar = isSel ? '✓' : player[0]?.toUpperCase();
+    const restrictionPills = isSel ? `
+      <div class="restrictions">
+        <span class="restr-label">restrict to:</span>
+        ${['ATT','MID','DEF'].map(line => {
+          const meta = LINE_META[line];
+          const active = restr.has(line);
+          return `<span class="rtag ${active?meta.cls:''}" onclick="toggleRestriction('${player}','${line}')">${meta.label}</span>`;
+        }).join('')}
+        ${restr.size === 0 ? '<span class="restr-none">none (any line)</span>' : ''}
+      </div>` : '';
+    return `
+      <div class="pcard ${isSel?'active':''}" id="pcard-${CSS.escape(player)}">
+        <div class="pcard-top" onclick="togglePlayer('${player}')">
+          <div style="display:flex;align-items:center;">
+            <div class="pcard-avatar">${avatar}</div>
+            <span class="pcard-name">${player}</span>
+          </div>
+          <button class="pcard-remove" onclick="event.stopPropagation();removePlayer('${player}')">×</button>
+        </div>
+        ${restrictionPills}
+      </div>`;
+  }).join('');
+
+  // Spin rows
+  const spinHtml = s.rolling && s.spinData.length > 0 ? `
+    <div class="sbox" style="margin-bottom:16px">
+      <div class="slabel">ASSIGNING...</div>
+      ${s.spinData.map(({player,position}) => `
+        <div class="pos-row spin" style="border-left-color:${position?.color||'#555'}">
+          <div class="pos-badge" style="background:${position?.color||'#555'}">${position?.label||'?'}</div>
+          <div class="pos-name">${player}</div>
+        </div>`).join('')}
+    </div>` : '';
+
+  // Any selector
+  const anyHtml = s.stage==='any' && !s.rolling ? `
+    <div class="sbox sbox-purple" style="margin-bottom:16px">
+      <div class="slabel slabel-purple">STEP 2 · WHO CAN PLAY ANY?</div>
+      <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:14px">
+        Tick 2–3 players eligible for <strong style="color:#9b59b6">ANY</strong>, then roll to pick one.
+      </p>
+      ${s.assignments.map(({player,position}) => {
+        const checked = !!s.anySelected[player];
+        return `
+          <div class="pos-row" style="border-left-color:${position?.color||'#555'};opacity:${checked?0.5:1};transition:opacity 0.15s;margin-bottom:8px">
+            <div class="pos-badge" style="background:${position?.color||'#555'}">${position?.label}</div>
+            <div class="pos-name">${player}</div>
+            <div class="any-check ${checked?'on':''}" onclick="toggleAny('${player}')">
+              ${checked?'<span class="any-check-inner">✓</span>':''}
+            </div>
+          </div>`;
+      }).join('')}
+      <div class="any-footer" style="margin-top:8px">
+        <span class="any-pool-label" style="color:${anyPoolValid?'#9b59b6':'rgba(255,255,255,0.3)'}">
+          ${anyPool.length===0?'Tick 2–3 players':anyPool.length===1?'Tick at least one more':`${anyPool.length} in pool`}
+        </span>
+        <button class="any-btn ${anyPoolValid?'ready':''}" onclick="rollAny()" ${anyPoolValid?'':'disabled'}>🎲 PICK ANY</button>
+      </div>
+    </div>` : '';
+
+  // Result
+  const resultHtml = s.stage==='result' && s.anyResult ? `
+    <div class="sbox" style="border-color:rgba(255,255,255,0.12);margin-bottom:16px">
+      <div class="slabel result-title">TONIGHT'S LINEUP</div>
+      ${sortedFinal.map(({player,position,isAny},i) => `
+        <div class="row-in" style="animation-delay:${i*55}ms">
+          <div class="pos-row ${isAny?'any-row-bg':''}" style="border-left-color:${position?.color||'#555'}">
+            <div class="pos-badge pos-badge-lg ${isAny?'badge-pulse':''}" style="background:${position?.color||'#555'}">${position?.label}</div>
+            <div class="pos-name pos-name-lg">${player}</div>
+            ${isAny?'<span class="any-tag">ANY</span>':''}
+          </div>
+        </div>`).join('')}
+      <div class="reroll-row">
+        <button class="reroll-btn" onclick="rollPositions()">↺ FULL REROLL</button>
+        <button class="reroll-btn reroll-btn-any" onclick="rerollAny()">↺ REROLL ANY</button>
+      </div>
+    </div>` : '';
+
+  document.getElementById('app').innerHTML = `
+    <div class="header">
+      <div class="header-sub">FC 26 · CLUBS MODE</div>
+      <div class="header-title">REAL SOSO DADS</div>
+      <div class="header-desc">Position randomiser · no GK · attack first</div>
+    </div>
+
+    <div class="sbox">
+      <div class="slabel">STEP 1 · SELECT PLAYERS & RESTRICTIONS</div>
+      <div class="flex-between">
+        <span class="count-label ${count>=2?'count-ok':'count-dim'}">
+          ${count===0?"Select who's playing":count===1?'Select at least one more':`${count} players selected`}
+        </span>
+        <button class="add-toggle" onclick="toggleAdd()">+ Add</button>
+      </div>
+      ${s.showAdd ? `
+        <div class="add-row">
+          <input class="add-input" id="newPlayerInput" type="text" placeholder="Gamertag..." onkeydown="if(event.key==='Enter')addPlayer()" />
+          <button class="add-btn" onclick="addPlayer()">Add</button>
+        </div>` : ''}
+      ${playerCardsHtml}
+      ${s.infeasible ? `<div class="warn">⚠ Can't satisfy all restrictions with ${count} players. Loosen some and try again.</div>` : ''}
+    </div>
+
+    <button class="roll-btn" onclick="rollPositions()" ${(!canRoll||s.rolling)?'disabled':''}>
+      ${s.rolling?'ROLLING...':count<2?'SELECT AT LEAST 2 PLAYERS':'🎲 ROLL POSITIONS'}
+    </button>
+
+    ${spinHtml}
+    ${anyHtml}
+    ${resultHtml}
+
+    <div class="legend">
+      ${[{l:'Attack',c:'#e74c3c'},{l:'Midfield',c:'#3498db'},{l:'Defence',c:'#2ecc71'},{l:'Any',c:'#9b59b6'}].map(({l,c})=>`
+        <div class="legend-item"><div class="legend-dot" style="background:${c}"></div>${l}</div>`).join('')}
+    </div>
+  `;
+
+  // Re-focus add input if visible
+  if (s.showAdd) {
+    const inp = document.getElementById('newPlayerInput');
+    if (inp) inp.focus();
+  }
+}
+
+// ── Actions ──────────────────────────────────────────────────────────────────
+function resetResult() {
+  state.stage = 'select';
+  state.assignments = [];
+  state.anySelected = {};
+  state.anyResult = null;
+  state.spinData = [];
+  state.infeasible = false;
+}
+
+function togglePlayer(name) {
+  state.selected[name] = !state.selected[name];
+  if (!state.selected[name]) delete state.selected[name];
+  resetResult();
+  render();
+}
+
+function toggleRestriction(player, line) {
+  if (!state.restrictions[player]) state.restrictions[player] = new Set();
+  const r = state.restrictions[player];
+  r.has(line) ? r.delete(line) : r.add(line);
+  resetResult();
+  render();
+}
+
+function toggleAdd() {
+  state.showAdd = !state.showAdd;
+  render();
+}
+
+function addPlayer() {
+  const inp = document.getElementById('newPlayerInput');
+  const name = inp ? inp.value.trim() : '';
+  if (name && !state.players.includes(name)) {
+    state.players.push(name);
+    state.showAdd = false;
+    render();
+  }
+}
+
+function removePlayer(name) {
+  state.players = state.players.filter(p => p !== name);
+  delete state.selected[name];
+  delete state.restrictions[name];
+  resetResult();
+  render();
+}
+
+function toggleAny(player) {
+  state.anySelected[player] = !state.anySelected[player];
+  if (!state.anySelected[player]) delete state.anySelected[player];
+  render();
+}
+
+function rollAny() {
+  const anyPool = state.players.filter(p => state.selected[p] && state.anySelected[p]);
+  if (anyPool.length < 2) return;
+  state.anyResult = pickRandom(anyPool);
+  state.stage = 'result';
+  render();
+}
+
+function rerollAny() {
+  state.stage = 'any';
+  state.anyResult = null;
+  state.anySelected = {};
+  render();
+}
+
+let spinInterval = null;
+function rollPositions() {
+  const selectedPlayers = state.players.filter(p => state.selected[p]);
+  const count = selectedPlayers.length;
+  if (count < 2 || count > 9 || state.rolling) return;
+
+  if (spinInterval) clearInterval(spinInterval);
+  state.rolling = true;
+  state.infeasible = false;
+  state.stage = 'select';
+  state.assignments = [];
+  state.anySelected = {};
+  state.anyResult = null;
+
+  const positions = POSITION_POOL.slice(0, count);
+  const restr = {};
+  for (const p of selectedPlayers) restr[p] = state.restrictions[p] || new Set();
+
+  // Find valid assignment
+  let result = null;
+  for (let attempt = 0; attempt < 50; attempt++) {
+    result = assignPositions(shuffle(selectedPlayers), positions, restr);
+    if (result) break;
+  }
+
+  let step = 0;
+  render();
+  spinInterval = setInterval(() => {
+    step++;
+    state.spinData = shuffle(selectedPlayers).map((p, i) => ({
+      player: p,
+      position: positions[i % positions.length],
+    }));
+    if (step >= 14) {
+      clearInterval(spinInterval);
+      state.rolling = false;
+      state.spinData = [];
+      if (!result) {
+        state.infeasible = true;
+        state.stage = 'select';
+      } else {
+        state.assignments = result;
+        state.stage = 'any';
+        state.anySelected = {};
+        state.anyResult = null;
+      }
+    }
+    render();
+  }, 75);
+}
+
+// ── Boot ─────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
