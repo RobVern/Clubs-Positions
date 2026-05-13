@@ -238,7 +238,7 @@ function render() {
   const s = state;
   const selectedPlayers = s.players.filter(p => s.selected[p]);
   const count = selectedPlayers.length;
-  const canRoll = count >= 2 && count <= 25;
+  const canRoll = count >= 2 && count <= 10;
   const anyPool = selectedPlayers.filter(p => s.anySelected[p]);
   const anyPoolValid = anyPool.length >= 2;
 
@@ -452,7 +452,7 @@ let spinInterval = null;
 function rollPositions() {
   const selectedPlayers = state.players.filter(p => state.selected[p]);
   const count = selectedPlayers.length;
-  if (count < 2 || count > 25 || state.rolling) return;
+  if (count < 2 || count > 10 || state.rolling) return;
 
   if (spinInterval) clearInterval(spinInterval);
   state.rolling = true;
