@@ -35,23 +35,6 @@
     .slabel { font-weight: 700; font-size: 10px; letter-spacing: 4px; color: rgba(255,255,255,0.35); margin-bottom: 12px; }
     .slabel-purple { color: rgba(155,89,182,0.8); }
 
-    /* GitHub panel */
-    .gh-wrap { margin-bottom: 16px; }
-    .gh-label { font-weight: 700; font-size: 10px; letter-spacing: 4px; color: rgba(255,255,255,0.3); margin-bottom: 8px; }
-    .gh-row { display: flex; gap: 8px; align-items: center; }
-    .gh-input { flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18); color: #fff; padding: 9px 12px; border-radius: 6px; font-family: 'Barlow', sans-serif; font-size: 13px; outline: none; }
-    .gh-input:focus { border-color: #00e676; }
-    .gh-input::placeholder { color: rgba(255,255,255,0.25); }
-    .gh-btn { padding: 9px 14px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.5); border-radius: 6px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
-    .gh-btn.ready { border-color: #00e676; color: #00e676; background: rgba(0,230,118,0.1); }
-    .gh-btn.ready:hover { background: rgba(0,230,118,0.2); }
-    .gh-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-    .gh-status { font-size: 12px; padding: 7px 10px; border-radius: 6px; margin-top: 8px; }
-    .gh-status.ok { background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.3); color: #00e676; }
-    .gh-status.err { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: #e74c3c; }
-    .gh-hint { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 6px; }
-    .gh-hint a { color: rgba(0,230,118,0.45); text-decoration: none; }
-
     /* Formation tabs */
     .ftabs { display: flex; gap: 8px; margin-bottom: 16px; }
     .ftab { flex: 1; padding: 11px 6px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.35); font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 1.5px; cursor: pointer; text-align: center; transition: all 0.15s; }
@@ -97,7 +80,6 @@
 
     .any-check { width: 22px; height: 22px; border-radius: 5px; border: 2px solid rgba(255,255,255,0.2); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.12s; }
     .any-check.on { border-color: #9b59b6; background: #9b59b6; }
-
     .any-btn { flex: 1; padding: 13px; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.25); border: none; border-radius: 9px; font-size: 18px; letter-spacing: 3px; font-family: 'Bebas Neue', sans-serif; cursor: not-allowed; transition: all 0.18s; }
     .any-btn.ready { background: linear-gradient(135deg, #9b59b6, #7d3c98); color: #fff; cursor: pointer; }
     .any-btn.ready:hover { transform: scale(1.03); box-shadow: 0 0 28px rgba(155,89,182,0.55); }
@@ -128,12 +110,6 @@
 <body>
 <div id="app"></div>
 <script>
-// ── Config ───────────────────────────────────────────────────────────────────
-const GH_USER   = "robvern";
-const GH_REPO   = "Clubs-Positions";
-const GH_FILE   = "index.html";
-const GH_BRANCH = "main";
-
 // ── Data ─────────────────────────────────────────────────────────────────────
 const DEFAULT_PLAYERS = [
   "Cresswell_86",
@@ -208,12 +184,6 @@ let state = {
   rolling:      false,
   spinData:     [],
   infeasible:   false,
-  ghToken:      localStorage.getItem("soso_gh_token") || "",
-  showGhPanel:  false,
-  titleTaps:    0,
-  ghStatus:     "",
-  ghStatusType: "",
-  ghPushing:    false,
 };
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -259,20 +229,6 @@ function assignPositions(players, positions, restrictions) {
   return bt(0) ? result : null;
 }
 
-// ── Admin unlock ─────────────────────────────────────────────────────────────
-let tapTimer = null;
-function tapTitle() {
-  state.titleTaps++;
-  if (tapTimer) clearTimeout(tapTimer);
-  if (state.titleTaps >= 5) {
-    state.titleTaps = 0;
-    state.showGhPanel = !state.showGhPanel;
-    render();
-    return;
-  }
-  tapTimer = setTimeout(() => { state.titleTaps = 0; }, 2000);
-}
-
 // ── Render ───────────────────────────────────────────────────────────────────
 function render() {
   const s = state;
@@ -290,25 +246,6 @@ function render() {
   const sortedFinal = [...finalAssignments].sort(
     (a, b) => (lineOrder[a.position?.line] ?? 9) - (lineOrder[b.position?.line] ?? 9)
   );
-
-  // GitHub panel
-  const ghHtml = s.showGhPanel ? `
-    <div class="gh-wrap">
-      <div class="gh-label">GITHUB · PUSH LIVE UPDATE</div>
-      <div class="gh-row">
-        <input class="gh-input" id="ghTokenInput" type="password"
-          placeholder="Paste GitHub token here..."
-          value="${s.ghToken.replace(/"/g,'&quot;')}"
-          oninput="saveToken(this.value)" />
-        <button class="gh-btn ${s.ghToken && !s.ghPushing ? 'ready' : ''}"
-          onclick="pushToGitHub()"
-          ${!s.ghToken || s.ghPushing ? 'disabled' : ''}>
-          ${s.ghPushing ? 'Pushing...' : '⬆ Push Live'}
-        </button>
-      </div>
-      ${s.ghStatus ? `<div class="gh-status ${s.ghStatusType}">${s.ghStatus}</div>` : ''}
-      <div class="gh-hint">Token saved on this device only. &nbsp;<a href="https://github.com/settings/tokens/new?scopes=repo&description=SosoDads" target="_blank">Generate token ↗</a></div>
-    </div>` : '';
 
   // Formation tabs
   const ftabsHtml = `
@@ -402,11 +339,10 @@ function render() {
   document.getElementById('app').innerHTML = `
     <div class="header">
       <div class="header-sub">FC 26 · CLUBS MODE</div>
-      <div class="header-title" onclick="tapTitle()" style="cursor:default">REAL SOSO DADS</div>
+      <div class="header-title">REAL SOSO DADS</div>
       <div class="header-desc">Position randomiser · no GK · attack first</div>
     </div>
 
-    ${ghHtml}
     ${ftabsHtml}
 
     <div class="sbox">
@@ -569,63 +505,6 @@ function rollPositions() {
     }
     render();
   }, 75);
-}
-
-// ── GitHub push ──────────────────────────────────────────────────────────────
-function saveToken(val) {
-  state.ghToken = val;
-  localStorage.setItem("soso_gh_token", val);
-  render();
-}
-
-async function pushToGitHub() {
-  if (!state.ghToken || state.ghPushing) return;
-  state.ghPushing = true;
-  state.ghStatus = "Pushing...";
-  state.ghStatusType = "";
-  render();
-
-  try {
-    const getRes = await fetch(
-      `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`,
-      { headers: { Authorization: `Bearer ${state.ghToken}`, Accept: "application/vnd.github+json" } }
-    );
-    if (!getRes.ok) {
-      const e = await getRes.json();
-      throw new Error(e.message || `GitHub error ${getRes.status}`);
-    }
-    const { sha } = await getRes.json();
-    // Clone the DOM and strip the token before pushing so GitHub secret scanning doesn't block it
-    const clone = document.documentElement.cloneNode(true);
-    const tokenInput = clone.querySelector('#ghTokenInput');
-    if (tokenInput) tokenInput.value = '';
-    const html = '<!DOCTYPE html>\n' + clone.outerHTML;
-    const encoded = btoa(unescape(encodeURIComponent(html)));
-    const putRes = await fetch(
-      `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${state.ghToken}`,
-          Accept: "application/vnd.github+json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message: "Update via app", content: encoded, sha, branch: GH_BRANCH }),
-      }
-    );
-    if (!putRes.ok) {
-      const e = await putRes.json();
-      throw new Error(e.message || `Push failed ${putRes.status}`);
-    }
-    state.ghStatus = "✓ Pushed! Site updates in ~60 seconds.";
-    state.ghStatusType = "ok";
-  } catch (e) {
-    state.ghStatus = "✗ " + e.message;
-    state.ghStatusType = "err";
-  } finally {
-    state.ghPushing = false;
-    render();
-  }
 }
 
 // ── Boot ─────────────────────────────────────────────────────────────────────
