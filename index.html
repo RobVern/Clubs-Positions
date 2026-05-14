@@ -209,6 +209,8 @@ let state = {
   spinData:     [],
   infeasible:   false,
   ghToken:      localStorage.getItem("soso_gh_token") || "",
+  showGhPanel:  false,
+  titleTaps:    0,
   ghStatus:     "",
   ghStatusType: "",
   ghPushing:    false,
@@ -257,6 +259,20 @@ function assignPositions(players, positions, restrictions) {
   return bt(0) ? result : null;
 }
 
+// ── Admin unlock ─────────────────────────────────────────────────────────────
+let tapTimer = null;
+function tapTitle() {
+  state.titleTaps++;
+  if (tapTimer) clearTimeout(tapTimer);
+  if (state.titleTaps >= 5) {
+    state.titleTaps = 0;
+    state.showGhPanel = !state.showGhPanel;
+    render();
+    return;
+  }
+  tapTimer = setTimeout(() => { state.titleTaps = 0; }, 2000);
+}
+
 // ── Render ───────────────────────────────────────────────────────────────────
 function render() {
   const s = state;
@@ -276,7 +292,7 @@ function render() {
   );
 
   // GitHub panel
-  const ghHtml = `
+  const ghHtml = s.showGhPanel ? `
     <div class="gh-wrap">
       <div class="gh-label">GITHUB · PUSH LIVE UPDATE</div>
       <div class="gh-row">
@@ -292,7 +308,7 @@ function render() {
       </div>
       ${s.ghStatus ? `<div class="gh-status ${s.ghStatusType}">${s.ghStatus}</div>` : ''}
       <div class="gh-hint">Token saved on this device only. &nbsp;<a href="https://github.com/settings/tokens/new?scopes=repo&description=SosoDads" target="_blank">Generate token ↗</a></div>
-    </div>`;
+    </div>` : '';
 
   // Formation tabs
   const ftabsHtml = `
@@ -386,7 +402,7 @@ function render() {
   document.getElementById('app').innerHTML = `
     <div class="header">
       <div class="header-sub">FC 26 · CLUBS MODE</div>
-      <div class="header-title">REAL SOSO DADS</div>
+      <div class="header-title" onclick="tapTitle()" style="cursor:default">REAL SOSO DADS</div>
       <div class="header-desc">Position randomiser · no GK · attack first</div>
     </div>
 
@@ -579,7 +595,11 @@ async function pushToGitHub() {
       throw new Error(e.message || `GitHub error ${getRes.status}`);
     }
     const { sha } = await getRes.json();
-    const html = document.documentElement.outerHTML;
+    // Clone the DOM and strip the token before pushing so GitHub secret scanning doesn't block it
+    const clone = document.documentElement.cloneNode(true);
+    const tokenInput = clone.querySelector('#ghTokenInput');
+    if (tokenInput) tokenInput.value = '';
+    const html = '<!DOCTYPE html>\n' + clone.outerHTML;
     const encoded = btoa(unescape(encodeURIComponent(html)));
     const putRes = await fetch(
       `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`,
