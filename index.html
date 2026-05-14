@@ -131,27 +131,11 @@
 <script>
 // ── Data ────────────────────────────────────────────────────────────────────
 const DEFAULT_PLAYERS = [
-  "Cresswell_86",
-  "I_Keys_I",
-  "RobVern",
   "Marko9Gardinic",
-  "stimpyuk",
-  "Tominie",
   "Lewiss_2021",
-  "CKtheDESTROYER_",
+  "Shrooms4TheYouth",
+  "RobVernazza",
   "temp-85949058134",
-  "Shrooms4TheYouth",  
-  "JoylessSizzles",
-  "Legohed",
-  "Matty2p",
-  "MrWilko-",
-  "Deadly_Jason",
-  "gazdavis11",
-  "ryanmcguinness10",
-  "bob91mur",
-  "NeverAgainForNow",
-  "MessC1_",
-  "OSMAN_IDRIS",
 ];
 
 const POSITION_POOL = [
@@ -159,10 +143,9 @@ const POSITION_POOL = [
   { label:"LW",  color:"#e74c3c", line:"ATT" },
   { label:"RW",  color:"#e74c3c", line:"ATT" },
   { label:"CAM", color:"#e07b00", line:"ATT" },
-  { label:"LDM",  color:"#3498db", line:"MID" },
-  { label:"RDM", color:"#3498db", line:"MID" },
-  { label:"LCB",  color:"#2ecc71", line:"DEF" },
-  { label:"RCB",  color:"#2ecc71", line:"DEF" },  
+  { label:"CM",  color:"#3498db", line:"MID" },
+  { label:"CDM", color:"#3498db", line:"MID" },
+  { label:"CB",  color:"#2ecc71", line:"DEF" },
   { label:"LB",  color:"#2ecc71", line:"DEF" },
   { label:"RB",  color:"#2ecc71", line:"DEF" },
 ];
@@ -238,7 +221,7 @@ function render() {
   const s = state;
   const selectedPlayers = s.players.filter(p => s.selected[p]);
   const count = selectedPlayers.length;
-  const canRoll = count >= 2 && count <= 10;
+  const canRoll = count >= 2 && count <= 9;
   const anyPool = selectedPlayers.filter(p => s.anySelected[p]);
   const anyPoolValid = anyPool.length >= 2;
 
@@ -452,7 +435,7 @@ let spinInterval = null;
 function rollPositions() {
   const selectedPlayers = state.players.filter(p => state.selected[p]);
   const count = selectedPlayers.length;
-  if (count < 2 || count > 10 || state.rolling) return;
+  if (count < 2 || count > 9 || state.rolling) return;
 
   if (spinInterval) clearInterval(spinInterval);
   state.rolling = true;
