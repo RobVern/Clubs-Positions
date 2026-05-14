@@ -23,28 +23,43 @@
       pointer-events: none;
       z-index: 0;
     }
-    #app {
-      position: relative;
-      z-index: 1;
-      max-width: 660px;
-      margin: 0 auto;
-      padding: 24px 16px 60px;
-    }
+    #app { position: relative; z-index: 1; max-width: 660px; margin: 0 auto; padding: 24px 16px 60px; }
 
-    /* Header */
-    .header { text-align: center; margin-bottom: 28px; }
+    .header { text-align: center; margin-bottom: 24px; }
     .header-sub { font-size: 10px; letter-spacing: 6px; color: #00e676; margin-bottom: 4px; font-weight: 700; }
     .header-title { font-family: 'Bebas Neue', sans-serif; font-size: 46px; line-height: 1; letter-spacing: 3px; text-shadow: 0 0 40px rgba(0,230,118,0.25); }
     .header-desc { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 6px; }
 
-    /* Section box */
     .sbox { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 18px; margin-bottom: 16px; }
     .sbox-purple { border-color: rgba(155,89,182,0.35); }
     .slabel { font-weight: 700; font-size: 10px; letter-spacing: 4px; color: rgba(255,255,255,0.35); margin-bottom: 12px; }
     .slabel-purple { color: rgba(155,89,182,0.8); }
 
+    /* GitHub panel */
+    .gh-wrap { margin-bottom: 16px; }
+    .gh-label { font-weight: 700; font-size: 10px; letter-spacing: 4px; color: rgba(255,255,255,0.3); margin-bottom: 8px; }
+    .gh-row { display: flex; gap: 8px; align-items: center; }
+    .gh-input { flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18); color: #fff; padding: 9px 12px; border-radius: 6px; font-family: 'Barlow', sans-serif; font-size: 13px; outline: none; }
+    .gh-input:focus { border-color: #00e676; }
+    .gh-input::placeholder { color: rgba(255,255,255,0.25); }
+    .gh-btn { padding: 9px 14px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.5); border-radius: 6px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+    .gh-btn.ready { border-color: #00e676; color: #00e676; background: rgba(0,230,118,0.1); }
+    .gh-btn.ready:hover { background: rgba(0,230,118,0.2); }
+    .gh-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .gh-status { font-size: 12px; padding: 7px 10px; border-radius: 6px; margin-top: 8px; }
+    .gh-status.ok { background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.3); color: #00e676; }
+    .gh-status.err { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: #e74c3c; }
+    .gh-hint { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 6px; }
+    .gh-hint a { color: rgba(0,230,118,0.45); text-decoration: none; }
+
+    /* Formation tabs */
+    .ftabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .ftab { flex: 1; padding: 11px 6px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.35); font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 1.5px; cursor: pointer; text-align: center; transition: all 0.15s; }
+    .ftab:hover { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.6); }
+    .ftab.active { background: rgba(0,230,118,0.1); border-color: #00e676; color: #00e676; }
+
     /* Player cards */
-    .pcard { background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; margin-bottom: 8px; transition: border-color 0.12s, background 0.12s; }
+    .pcard { border: 1.5px solid rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; margin-bottom: 8px; transition: border-color 0.12s, background 0.12s; background: rgba(255,255,255,0.03); }
     .pcard.active { background: rgba(0,230,118,0.07); border-color: rgba(0,230,118,0.5); }
     .pcard-top { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; cursor: pointer; }
     .pcard-avatar { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 13px; color: rgba(255,255,255,0.4); font-weight: 700; flex-shrink: 0; font-family: 'Bebas Neue', sans-serif; transition: background 0.12s, color 0.12s; }
@@ -52,55 +67,49 @@
     .pcard-name { font-weight: 600; font-size: 14px; color: rgba(255,255,255,0.55); margin-left: 9px; transition: color 0.12s; }
     .pcard.active .pcard-name { color: #fff; }
     .pcard-remove { background: none; border: none; color: rgba(255,255,255,0.18); cursor: pointer; font-size: 17px; padding: 0 0 0 6px; line-height: 1; }
-
-    /* Restriction pills */
     .restrictions { display: flex; align-items: center; gap: 6px; padding: 0 14px 11px; flex-wrap: wrap; }
-    .restr-label { font-size: 11px; color: rgba(255,255,255,0.3); margin-right: 2px; letter-spacing: 0.5px; }
-    .rtag { cursor: pointer; user-select: none; border-radius: 5px; padding: 3px 8px; font-size: 11px; font-weight: 700; letter-spacing: 1px; border: 1.5px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.3); background: transparent; transition: background 0.12s, border-color 0.12s, color 0.12s; }
+    .restr-label { font-size: 11px; color: rgba(255,255,255,0.3); margin-right: 2px; }
+    .rtag { cursor: pointer; user-select: none; border-radius: 5px; padding: 3px 8px; font-size: 11px; font-weight: 700; letter-spacing: 1px; border: 1.5px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.3); background: transparent; transition: all 0.12s; }
     .rtag.att-on { background: rgba(231,76,60,0.15); border-color: #e74c3c; color: #e74c3c; }
     .rtag.mid-on { background: rgba(52,152,219,0.15); border-color: #3498db; color: #3498db; }
     .rtag.def-on { background: rgba(46,204,113,0.15); border-color: #2ecc71; color: #2ecc71; }
     .restr-none { font-size: 11px; color: rgba(255,255,255,0.2); }
 
-    /* Add player */
     .add-row { display: flex; gap: 8px; margin-bottom: 12px; }
     .add-input { flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18); color: #fff; padding: 8px 12px; border-radius: 6px; font-family: 'Barlow', sans-serif; font-size: 14px; outline: none; }
     .add-input:focus { border-color: #00e676; }
     .add-input::placeholder { color: rgba(255,255,255,0.3); }
     .add-btn { background: #00e676; color: #000; border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 13px; }
     .add-toggle { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.65); border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 12px; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .count-ok { color: #00e676; font-size: 12px; }
+    .count-dim { color: rgba(255,255,255,0.4); font-size: 12px; }
 
-    /* Roll button */
-    .roll-btn { width: 100%; padding: 17px; background: linear-gradient(135deg, #00e676, #00c853); color: #000; border: none; border-radius: 11px; font-size: 21px; letter-spacing: 4px; font-family: 'Bebas Neue', sans-serif; cursor: pointer; margin-bottom: 18px; transition: transform 0.18s, box-shadow 0.18s, background 0.18s, color 0.18s; }
+    .roll-btn { width: 100%; padding: 17px; background: linear-gradient(135deg, #00e676, #00c853); color: #000; border: none; border-radius: 11px; font-size: 21px; letter-spacing: 4px; font-family: 'Bebas Neue', sans-serif; cursor: pointer; margin-bottom: 18px; transition: transform 0.18s, box-shadow 0.18s; }
     .roll-btn:hover:not(:disabled) { transform: scale(1.03); box-shadow: 0 0 28px rgba(0,230,118,0.45); }
     .roll-btn:disabled { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.25); cursor: not-allowed; transform: none; box-shadow: none; }
 
-    /* Position row */
     .pos-row { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); border-radius: 7px; padding: 10px 14px; margin-bottom: 8px; border-left: 3px solid #555; }
     .pos-badge { color: #fff; border-radius: 5px; padding: 3px 9px; font-size: 14px; font-family: 'Bebas Neue', sans-serif; letter-spacing: 1.5px; min-width: 48px; text-align: center; flex-shrink: 0; }
     .pos-badge-lg { border-radius: 6px; padding: 4px 10px; font-size: 15px; min-width: 52px; }
     .pos-name { font-weight: 600; font-size: 14px; color: #fff; flex: 1; }
     .pos-name-lg { font-size: 15px; }
 
-    /* Any checkbox */
     .any-check { width: 22px; height: 22px; border-radius: 5px; border: 2px solid rgba(255,255,255,0.2); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.12s; }
     .any-check.on { border-color: #9b59b6; background: #9b59b6; }
-    .any-check-inner { color: #fff; font-size: 13px; line-height: 1; }
 
-    /* Any roll btn */
-    .any-btn { flex: 1; padding: 13px; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.25); border: none; border-radius: 9px; font-size: 18px; letter-spacing: 3px; font-family: 'Bebas Neue', sans-serif; cursor: not-allowed; transition: transform 0.18s, box-shadow 0.18s, background 0.18s, color 0.18s; }
+    .any-btn { flex: 1; padding: 13px; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.25); border: none; border-radius: 9px; font-size: 18px; letter-spacing: 3px; font-family: 'Bebas Neue', sans-serif; cursor: not-allowed; transition: all 0.18s; }
     .any-btn.ready { background: linear-gradient(135deg, #9b59b6, #7d3c98); color: #fff; cursor: pointer; }
     .any-btn.ready:hover { transform: scale(1.03); box-shadow: 0 0 28px rgba(155,89,182,0.55); }
+    .any-footer { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+    .any-pool-label { font-size: 12px; min-width: 110px; }
 
-    /* Reroll buttons */
     .reroll-row { display: flex; gap: 8px; margin-top: 14px; }
     .reroll-btn { flex: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.45); border-radius: 7px; cursor: pointer; font-weight: 600; font-size: 13px; letter-spacing: 1px; font-family: 'Barlow', sans-serif; }
     .reroll-btn-any { background: rgba(155,89,182,0.12); border-color: rgba(155,89,182,0.3); color: #9b59b6; }
 
-    /* Infeasible warning */
     .warn { margin-top: 12px; padding: 10px 14px; background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.3); border-radius: 8px; font-size: 13px; color: #e74c3c; }
 
-    /* Animations */
     .spin { animation: flicker 0.07s infinite; }
     @keyframes flicker { 0%,100%{opacity:1;}50%{opacity:0.5;} }
     .row-in { animation: rowIn 0.32s ease forwards; opacity: 0; }
@@ -108,47 +117,74 @@
     .badge-pulse { animation: bpulse 1.8s ease-in-out infinite; }
     @keyframes bpulse { 0%,100%{box-shadow:0 0 0 0 rgba(155,89,182,0.5);}50%{box-shadow:0 0 0 8px rgba(155,89,182,0);} }
 
-    /* Legend */
     .legend { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px; }
     .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: rgba(255,255,255,0.35); }
     .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
-
-    /* Misc */
-    .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .count-label { font-size: 12px; }
-    .count-ok { color: #00e676; }
-    .count-dim { color: rgba(255,255,255,0.4); }
-    .any-footer { display: flex; align-items: center; gap: 10px; }
-    .any-pool-label { font-size: 12px; min-width: 110px; }
-    .result-title { text-align: center; letter-spacing: 5px; }
     .any-tag { font-size: 11px; color: #9b59b6; font-weight: 700; letter-spacing: 2px; }
     .any-row-bg { background: rgba(155,89,182,0.1) !important; }
+    .result-title { text-align: center; letter-spacing: 5px; }
   </style>
 </head>
 <body>
 <div id="app"></div>
-
 <script>
-// ── Data ────────────────────────────────────────────────────────────────────
+// ── Config ───────────────────────────────────────────────────────────────────
+const GH_USER   = "robvern";
+const GH_REPO   = "Clubs-Positions";
+const GH_FILE   = "index.html";
+const GH_BRANCH = "main";
+
+// ── Data ─────────────────────────────────────────────────────────────────────
 const DEFAULT_PLAYERS = [
+  "Cresswell_86",
+  "I_Keys_I",
+  "RobVern",
   "Marko9Gardinic",
+  "stimpyuk",
+  "Tominie",
   "Lewiss_2021",
-  "Shrooms4TheYouth",
-  "RobVernazza",
+  "CKtheDESTROYER_",
   "temp-85949058134",
+  "Shrooms4TheYouth",
+  "JoylessSizzles",
+  "Legohed",
+  "Matty2p",
+  "MrWilko-",
+  "Deadly_Jason",
+  "gazdavis11",
+  "ryanmcguinness10",
+  "bob91mur",
+  "NeverAgainForNow",
+  "MessC1_",
+  "OSMAN_IDRIS",
 ];
 
-const POSITION_POOL = [
-  { label:"ST",  color:"#e74c3c", line:"ATT" },
-  { label:"LW",  color:"#e74c3c", line:"ATT" },
-  { label:"RW",  color:"#e74c3c", line:"ATT" },
-  { label:"CAM", color:"#e07b00", line:"ATT" },
-  { label:"CM",  color:"#3498db", line:"MID" },
-  { label:"CDM", color:"#3498db", line:"MID" },
-  { label:"CB",  color:"#2ecc71", line:"DEF" },
-  { label:"LB",  color:"#2ecc71", line:"DEF" },
-  { label:"RB",  color:"#2ecc71", line:"DEF" },
-];
+const FORMATIONS = {
+  "4-2-1-3": [
+    { label:"ST",  color:"#e74c3c", line:"ATT" },
+    { label:"LW",  color:"#e74c3c", line:"ATT" },
+    { label:"RW",  color:"#e74c3c", line:"ATT" },
+    { label:"CAM", color:"#e07b00", line:"ATT" },
+    { label:"LDM", color:"#3498db", line:"MID" },
+    { label:"RDM", color:"#3498db", line:"MID" },
+    { label:"LCB", color:"#2ecc71", line:"DEF" },
+    { label:"RCB", color:"#2ecc71", line:"DEF" },
+    { label:"LB",  color:"#2ecc71", line:"DEF" },
+    { label:"RB",  color:"#2ecc71", line:"DEF" },
+  ],
+  "4-1-2-1-2": [
+    { label:"LS",  color:"#e74c3c", line:"ATT" },
+    { label:"RS",  color:"#e74c3c", line:"ATT" },
+    { label:"CAM", color:"#e07b00", line:"ATT" },
+    { label:"LCM", color:"#3498db", line:"MID" },
+    { label:"RCM", color:"#3498db", line:"MID" },
+    { label:"CDM", color:"#3498db", line:"MID" },
+    { label:"LB",  color:"#2ecc71", line:"DEF" },
+    { label:"RB",  color:"#2ecc71", line:"DEF" },
+    { label:"LCB", color:"#2ecc71", line:"DEF" },
+    { label:"RCB", color:"#2ecc71", line:"DEF" },
+  ],
+};
 
 const LINE_META = {
   ATT: { label:"Attack",   color:"#e74c3c", cls:"att-on" },
@@ -158,22 +194,27 @@ const LINE_META = {
 
 const lineOrder = { ATT:0, MID:1, DEF:2, ANY:3 };
 
-// ── State ───────────────────────────────────────────────────────────────────
+// ── State ────────────────────────────────────────────────────────────────────
 let state = {
-  players: [...DEFAULT_PLAYERS],
-  selected: {},        // { name: bool }
-  restrictions: {},    // { name: Set<"ATT"|"MID"|"DEF"> }
-  showAdd: false,
-  stage: "select",     // "select" | "any" | "result"
-  assignments: [],     // [{player, position}]
-  anySelected: {},     // { name: bool }
-  anyResult: null,
-  rolling: false,
-  spinData: [],
-  infeasible: false,
+  players:      [...DEFAULT_PLAYERS],
+  selected:     {},
+  restrictions: {},
+  formation:    "4-2-1-3",
+  showAdd:      false,
+  stage:        "select",
+  assignments:  [],
+  anySelected:  {},
+  anyResult:    null,
+  rolling:      false,
+  spinData:     [],
+  infeasible:   false,
+  ghToken:      localStorage.getItem("soso_gh_token") || "",
+  ghStatus:     "",
+  ghStatusType: "",
+  ghPushing:    false,
 };
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -187,29 +228,29 @@ function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function assignPositions(players, positions, restrictions) {
   const sorted = [...players].sort((a, b) => {
-    const ra = (restrictions[a]||new Set()).size;
-    const rb = (restrictions[b]||new Set()).size;
+    const ra = (restrictions[a] || new Set()).size;
+    const rb = (restrictions[b] || new Set()).size;
     if (ra === 0 && rb === 0) return 0;
     if (ra === 0) return 1;
     if (rb === 0) return -1;
     return ra - rb;
   });
   const posPool = [...positions];
-  const result = new Array(sorted.length).fill(null);
+  const result  = new Array(sorted.length).fill(null);
   const usedPos = new Array(posPool.length).fill(false);
   function bt(idx) {
     if (idx === sorted.length) return true;
-    const player = sorted[idx];
+    const player  = sorted[idx];
     const allowed = restrictions[player] || new Set();
     for (let pi = 0; pi < posPool.length; pi++) {
       if (usedPos[pi]) continue;
       const pos = posPool[pi];
       if (allowed.size > 0 && !allowed.has(pos.line)) continue;
       usedPos[pi] = true;
-      result[idx] = { player, position: pos };
+      result[idx]  = { player, position: pos };
       if (bt(idx + 1)) return true;
       usedPos[pi] = false;
-      result[idx] = null;
+      result[idx]  = null;
     }
     return false;
   }
@@ -221,7 +262,7 @@ function render() {
   const s = state;
   const selectedPlayers = s.players.filter(p => s.selected[p]);
   const count = selectedPlayers.length;
-  const canRoll = count >= 2 && count <= 9;
+  const canRoll = count >= 2 && count <= 10;
   const anyPool = selectedPlayers.filter(p => s.anySelected[p]);
   const anyPoolValid = anyPool.length >= 2;
 
@@ -231,84 +272,109 @@ function render() {
     isAny: a.player === s.anyResult,
   }));
   const sortedFinal = [...finalAssignments].sort(
-    (a, b) => (lineOrder[a.position?.line]??9) - (lineOrder[b.position?.line]??9)
+    (a, b) => (lineOrder[a.position?.line] ?? 9) - (lineOrder[b.position?.line] ?? 9)
   );
 
-  // Build player cards HTML
-  const playerCardsHtml = s.players.map(player => {
+  // GitHub panel
+  const ghHtml = `
+    <div class="gh-wrap">
+      <div class="gh-label">GITHUB · PUSH LIVE UPDATE</div>
+      <div class="gh-row">
+        <input class="gh-input" id="ghTokenInput" type="password"
+          placeholder="Paste GitHub token here..."
+          value="${s.ghToken.replace(/"/g,'&quot;')}"
+          oninput="saveToken(this.value)" />
+        <button class="gh-btn ${s.ghToken && !s.ghPushing ? 'ready' : ''}"
+          onclick="pushToGitHub()"
+          ${!s.ghToken || s.ghPushing ? 'disabled' : ''}>
+          ${s.ghPushing ? 'Pushing...' : '⬆ Push Live'}
+        </button>
+      </div>
+      ${s.ghStatus ? `<div class="gh-status ${s.ghStatusType}">${s.ghStatus}</div>` : ''}
+      <div class="gh-hint">Token saved on this device only. &nbsp;<a href="https://github.com/settings/tokens/new?scopes=repo&description=SosoDads" target="_blank">Generate token ↗</a></div>
+    </div>`;
+
+  // Formation tabs
+  const ftabsHtml = `
+    <div class="ftabs">
+      ${Object.keys(FORMATIONS).map(f =>
+        `<div class="ftab ${s.formation === f ? 'active' : ''}" onclick="setFormation('${f}')">${f}</div>`
+      ).join('')}
+    </div>`;
+
+  // Player cards
+  const cardsHtml = s.players.map(player => {
     const isSel = !!s.selected[player];
     const restr = s.restrictions[player] || new Set();
-    const avatar = isSel ? '✓' : player[0]?.toUpperCase();
-    const restrictionPills = isSel ? `
-      <div class="restrictions">
-        <span class="restr-label">restrict to:</span>
-        ${['ATT','MID','DEF'].map(line => {
-          const meta = LINE_META[line];
-          const active = restr.has(line);
-          return `<span class="rtag ${active?meta.cls:''}" onclick="toggleRestriction('${player}','${line}')">${meta.label}</span>`;
-        }).join('')}
-        ${restr.size === 0 ? '<span class="restr-none">none (any line)</span>' : ''}
-      </div>` : '';
+    const safeId = player.replace(/[^a-zA-Z0-9]/g, '_');
     return `
-      <div class="pcard ${isSel?'active':''}" id="pcard-${CSS.escape(player)}">
+      <div class="pcard ${isSel ? 'active' : ''}" id="pcard-${safeId}">
         <div class="pcard-top" onclick="togglePlayer('${player}')">
           <div style="display:flex;align-items:center;">
-            <div class="pcard-avatar">${avatar}</div>
+            <div class="pcard-avatar">${isSel ? '✓' : player[0].toUpperCase()}</div>
             <span class="pcard-name">${player}</span>
           </div>
           <button class="pcard-remove" onclick="event.stopPropagation();removePlayer('${player}')">×</button>
         </div>
-        ${restrictionPills}
+        ${isSel ? `
+          <div class="restrictions">
+            <span class="restr-label">restrict to:</span>
+            ${['ATT','MID','DEF'].map(line => {
+              const m = LINE_META[line];
+              return `<span class="rtag ${restr.has(line) ? m.cls : ''}" onclick="toggleRestriction('${player}','${line}')">${m.label}</span>`;
+            }).join('')}
+            ${restr.size === 0 ? '<span class="restr-none">none (any line)</span>' : ''}
+          </div>` : ''}
       </div>`;
   }).join('');
 
-  // Spin rows
+  // Spin
   const spinHtml = s.rolling && s.spinData.length > 0 ? `
     <div class="sbox" style="margin-bottom:16px">
       <div class="slabel">ASSIGNING...</div>
-      ${s.spinData.map(({player,position}) => `
-        <div class="pos-row spin" style="border-left-color:${position?.color||'#555'}">
-          <div class="pos-badge" style="background:${position?.color||'#555'}">${position?.label||'?'}</div>
+      ${s.spinData.map(({player, position}) => `
+        <div class="pos-row spin" style="border-left-color:${position.color}">
+          <div class="pos-badge" style="background:${position.color}">${position.label}</div>
           <div class="pos-name">${player}</div>
         </div>`).join('')}
     </div>` : '';
 
   // Any selector
-  const anyHtml = s.stage==='any' && !s.rolling ? `
+  const anyHtml = s.stage === 'any' && !s.rolling ? `
     <div class="sbox sbox-purple" style="margin-bottom:16px">
       <div class="slabel slabel-purple">STEP 2 · WHO CAN PLAY ANY?</div>
       <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:14px">
         Tick 2–3 players eligible for <strong style="color:#9b59b6">ANY</strong>, then roll to pick one.
       </p>
-      ${s.assignments.map(({player,position}) => {
+      ${s.assignments.map(({player, position}) => {
         const checked = !!s.anySelected[player];
         return `
-          <div class="pos-row" style="border-left-color:${position?.color||'#555'};opacity:${checked?0.5:1};transition:opacity 0.15s;margin-bottom:8px">
-            <div class="pos-badge" style="background:${position?.color||'#555'}">${position?.label}</div>
+          <div class="pos-row" style="border-left-color:${position.color};opacity:${checked ? 0.5 : 1};margin-bottom:8px">
+            <div class="pos-badge" style="background:${position.color}">${position.label}</div>
             <div class="pos-name">${player}</div>
-            <div class="any-check ${checked?'on':''}" onclick="toggleAny('${player}')">
-              ${checked?'<span class="any-check-inner">✓</span>':''}
+            <div class="any-check ${checked ? 'on' : ''}" onclick="toggleAny('${player}')">
+              ${checked ? '<span style="color:#fff;font-size:13px">✓</span>' : ''}
             </div>
           </div>`;
       }).join('')}
-      <div class="any-footer" style="margin-top:8px">
-        <span class="any-pool-label" style="color:${anyPoolValid?'#9b59b6':'rgba(255,255,255,0.3)'}">
-          ${anyPool.length===0?'Tick 2–3 players':anyPool.length===1?'Tick at least one more':`${anyPool.length} in pool`}
+      <div class="any-footer">
+        <span class="any-pool-label" style="color:${anyPoolValid ? '#9b59b6' : 'rgba(255,255,255,0.3)'}">
+          ${anyPool.length === 0 ? 'Tick 2–3 players' : anyPool.length === 1 ? 'Tick one more' : `${anyPool.length} in pool`}
         </span>
-        <button class="any-btn ${anyPoolValid?'ready':''}" onclick="rollAny()" ${anyPoolValid?'':'disabled'}>🎲 PICK ANY</button>
+        <button class="any-btn ${anyPoolValid ? 'ready' : ''}" onclick="rollAny()" ${anyPoolValid ? '' : 'disabled'}>🎲 PICK ANY</button>
       </div>
     </div>` : '';
 
   // Result
-  const resultHtml = s.stage==='result' && s.anyResult ? `
+  const resultHtml = s.stage === 'result' && s.anyResult ? `
     <div class="sbox" style="border-color:rgba(255,255,255,0.12);margin-bottom:16px">
       <div class="slabel result-title">TONIGHT'S LINEUP</div>
-      ${sortedFinal.map(({player,position,isAny},i) => `
-        <div class="row-in" style="animation-delay:${i*55}ms">
-          <div class="pos-row ${isAny?'any-row-bg':''}" style="border-left-color:${position?.color||'#555'}">
-            <div class="pos-badge pos-badge-lg ${isAny?'badge-pulse':''}" style="background:${position?.color||'#555'}">${position?.label}</div>
+      ${sortedFinal.map(({player, position, isAny}, i) => `
+        <div class="row-in" style="animation-delay:${i * 55}ms">
+          <div class="pos-row ${isAny ? 'any-row-bg' : ''}" style="border-left-color:${position.color}">
+            <div class="pos-badge pos-badge-lg ${isAny ? 'badge-pulse' : ''}" style="background:${position.color}">${position.label}</div>
             <div class="pos-name pos-name-lg">${player}</div>
-            ${isAny?'<span class="any-tag">ANY</span>':''}
+            ${isAny ? '<span class="any-tag">ANY</span>' : ''}
           </div>
         </div>`).join('')}
       <div class="reroll-row">
@@ -324,25 +390,29 @@ function render() {
       <div class="header-desc">Position randomiser · no GK · attack first</div>
     </div>
 
+    ${ghHtml}
+    ${ftabsHtml}
+
     <div class="sbox">
       <div class="slabel">STEP 1 · SELECT PLAYERS & RESTRICTIONS</div>
       <div class="flex-between">
-        <span class="count-label ${count>=2?'count-ok':'count-dim'}">
-          ${count===0?"Select who's playing":count===1?'Select at least one more':`${count} players selected`}
+        <span class="${count >= 2 ? 'count-ok' : 'count-dim'}">
+          ${count === 0 ? "Select who's playing" : count === 1 ? 'Select at least one more' : `${count} players selected`}
         </span>
         <button class="add-toggle" onclick="toggleAdd()">+ Add</button>
       </div>
       ${s.showAdd ? `
         <div class="add-row">
-          <input class="add-input" id="newPlayerInput" type="text" placeholder="Gamertag..." onkeydown="if(event.key==='Enter')addPlayer()" />
+          <input class="add-input" id="newPlayerInput" type="text" placeholder="Gamertag..."
+            onkeydown="if(event.key==='Enter')addPlayer()" />
           <button class="add-btn" onclick="addPlayer()">Add</button>
         </div>` : ''}
-      ${playerCardsHtml}
+      ${cardsHtml}
       ${s.infeasible ? `<div class="warn">⚠ Can't satisfy all restrictions with ${count} players. Loosen some and try again.</div>` : ''}
     </div>
 
-    <button class="roll-btn" onclick="rollPositions()" ${(!canRoll||s.rolling)?'disabled':''}>
-      ${s.rolling?'ROLLING...':count<2?'SELECT AT LEAST 2 PLAYERS':'🎲 ROLL POSITIONS'}
+    <button class="roll-btn" onclick="rollPositions()" ${!canRoll || s.rolling ? 'disabled' : ''}>
+      ${s.rolling ? 'ROLLING...' : count < 2 ? 'SELECT AT LEAST 2 PLAYERS' : '🎲 ROLL POSITIONS'}
     </button>
 
     ${spinHtml}
@@ -350,12 +420,11 @@ function render() {
     ${resultHtml}
 
     <div class="legend">
-      ${[{l:'Attack',c:'#e74c3c'},{l:'Midfield',c:'#3498db'},{l:'Defence',c:'#2ecc71'},{l:'Any',c:'#9b59b6'}].map(({l,c})=>`
-        <div class="legend-item"><div class="legend-dot" style="background:${c}"></div>${l}</div>`).join('')}
-    </div>
-  `;
+      ${[{l:'Attack',c:'#e74c3c'},{l:'Midfield',c:'#3498db'},{l:'Defence',c:'#2ecc71'},{l:'Any',c:'#9b59b6'}].map(({l,c}) =>
+        `<div class="legend-item"><div class="legend-dot" style="background:${c}"></div>${l}</div>`
+      ).join('')}
+    </div>`;
 
-  // Re-focus add input if visible
   if (s.showAdd) {
     const inp = document.getElementById('newPlayerInput');
     if (inp) inp.focus();
@@ -383,6 +452,13 @@ function toggleRestriction(player, line) {
   if (!state.restrictions[player]) state.restrictions[player] = new Set();
   const r = state.restrictions[player];
   r.has(line) ? r.delete(line) : r.add(line);
+  resetResult();
+  render();
+}
+
+function setFormation(f) {
+  if (state.formation === f) return;
+  state.formation = f;
   resetResult();
   render();
 }
@@ -417,9 +493,9 @@ function toggleAny(player) {
 }
 
 function rollAny() {
-  const anyPool = state.players.filter(p => state.selected[p] && state.anySelected[p]);
-  if (anyPool.length < 2) return;
-  state.anyResult = pickRandom(anyPool);
+  const pool = state.players.filter(p => state.selected[p] && state.anySelected[p]);
+  if (pool.length < 2) return;
+  state.anyResult = pickRandom(pool);
   state.stage = 'result';
   render();
 }
@@ -435,9 +511,9 @@ let spinInterval = null;
 function rollPositions() {
   const selectedPlayers = state.players.filter(p => state.selected[p]);
   const count = selectedPlayers.length;
-  if (count < 2 || count > 9 || state.rolling) return;
-
+  if (count < 2 || count > 10 || state.rolling) return;
   if (spinInterval) clearInterval(spinInterval);
+
   state.rolling = true;
   state.infeasible = false;
   state.stage = 'select';
@@ -445,11 +521,10 @@ function rollPositions() {
   state.anySelected = {};
   state.anyResult = null;
 
-  const positions = POSITION_POOL.slice(0, count);
+  const positions = FORMATIONS[state.formation].slice(0, count);
   const restr = {};
   for (const p of selectedPlayers) restr[p] = state.restrictions[p] || new Set();
 
-  // Find valid assignment
   let result = null;
   for (let attempt = 0; attempt < 50; attempt++) {
     result = assignPositions(shuffle(selectedPlayers), positions, restr);
@@ -474,12 +549,63 @@ function rollPositions() {
       } else {
         state.assignments = result;
         state.stage = 'any';
-        state.anySelected = {};
-        state.anyResult = null;
       }
     }
     render();
   }, 75);
+}
+
+// ── GitHub push ──────────────────────────────────────────────────────────────
+function saveToken(val) {
+  state.ghToken = val;
+  localStorage.setItem("soso_gh_token", val);
+  render();
+}
+
+async function pushToGitHub() {
+  if (!state.ghToken || state.ghPushing) return;
+  state.ghPushing = true;
+  state.ghStatus = "Pushing...";
+  state.ghStatusType = "";
+  render();
+
+  try {
+    const getRes = await fetch(
+      `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`,
+      { headers: { Authorization: `Bearer ${state.ghToken}`, Accept: "application/vnd.github+json" } }
+    );
+    if (!getRes.ok) {
+      const e = await getRes.json();
+      throw new Error(e.message || `GitHub error ${getRes.status}`);
+    }
+    const { sha } = await getRes.json();
+    const html = document.documentElement.outerHTML;
+    const encoded = btoa(unescape(encodeURIComponent(html)));
+    const putRes = await fetch(
+      `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${state.ghToken}`,
+          Accept: "application/vnd.github+json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: "Update via app", content: encoded, sha, branch: GH_BRANCH }),
+      }
+    );
+    if (!putRes.ok) {
+      const e = await putRes.json();
+      throw new Error(e.message || `Push failed ${putRes.status}`);
+    }
+    state.ghStatus = "✓ Pushed! Site updates in ~60 seconds.";
+    state.ghStatusType = "ok";
+  } catch (e) {
+    state.ghStatus = "✗ " + e.message;
+    state.ghStatusType = "err";
+  } finally {
+    state.ghPushing = false;
+    render();
+  }
 }
 
 // ── Boot ─────────────────────────────────────────────────────────────────────
